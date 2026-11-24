@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio | Bryan Zumba - Ingeniero en Sistemas</title>
+  <!-- Hojas de estilo compartidas en todas las páginas -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+
+<body>
+
+  <!-- ====================================================================
+       ENCABEZADO Y MENÚ DE NAVEGACIÓN (Idéntico en las 5 páginas)
+       ==================================================================== -->
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Navegación principal">
+      <a href="index.html" class="logo">Mi Portafolio</a>
+
+      <!-- Botón menú hamburguesa para dispositivos móviles -->
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <i class="icon icon-menu" aria-hidden="true"></i>
+      </button>
+
+      <!-- Lista de enlaces a las 5 vistas del proyecto -->
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link active">Inicio</a></li>
+        <li><a href="about.html" class="nav-link">Sobre mí</a></li>
+        <li><a href="skills.html" class="nav-link">Habilidades</a></li>
+        <li><a href="projects.html" class="nav-link">Proyectos</a></li>
+        <li><a href="contact.html" class="nav-link">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ====================================================================
+       CONTENIDO PRINCIPAL DE LA PÁGINA DE INICIO (DISEÑO BENTO GRID)
+       ==================================================================== -->
+  <main class="container">
+    <!-- Fila Superior del Bento Grid -->
+    <section class="bento-hero-grid">
+      <!-- Módulo Bento Principal: Presentación y Foto de Perfil -->
+      <article class="bento-card bento-main-profile">
+        <div class="hero-content">
+          <p class="hero-role-sub">Ingeniero de Proyectos Jr. en Hitss · Guayaquil, Ecuador</p>
+          <h1 class="hero-title">Soy <span>Bryan Roberto Zumba Molleturo</span>, Ingeniero en Sistemas de Información</h1>
+          <p class="hero-description">
+            Ingeniero de Sistemas con experiencia en desarrollo de software, soluciones web (Frontend y Backend),
+            integración de APIs REST, bases de datos Oracle (SQL / PL/SQL), Linux/Shell y automatización de procesos
+            de negocio y facturación electrónica (Billing).
+          </p>
+          <div class="hero-actions">
+            <a href="projects.html" class="btn btn-primary">Ver experiencia y proyectos</a>
+            <a href="contact.html" class="btn btn-outline">Contáctame</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <img src="assets/img/FOTOPERFIL.png" alt="Ilustración de perfil de Bryan Roberto Zumba Molleturo"
+            class="hero-avatar">
+        </div>
+      </article>
+
+      <!-- Columna Derecha del Bento: Stack Principal con Logos + Proyecto Destacado -->
+      <div class="bento-side-column">
+        <article class="bento-card">
+          <p class="bento-label">Stack Tecnológico Principal</p>
+          <h2 class="bento-title">Tecnologías que utilizo</h2>
+          <div class="tech-Wall">
+            <span class="badge"><i class="tech-logo logo-react"></i> React</span>
+            <span class="badge"><i class="tech-logo logo-ts"></i> TypeScript</span>
+            <span class="badge"><i class="tech-logo logo-node"></i> Node.js</span>
+            <span class="badge"><i class="tech-logo logo-oracle"></i> Oracle PL/SQL</span>
+            <span class="badge"><i class="tech-logo logo-js"></i> JavaScript</span>
+            <span class="badge"><i class="tech-logo logo-linux"></i> Linux / Shell</span>
+            <span class="badge"><i class="tech-logo logo-html"></i> HTML5</span>
+            <span class="badge"><i class="tech-logo logo-css"></i> CSS3</span>
+            <span class="badge"><i class="tech-logo logo-php"></i> PHP</span>
+            <span class="badge"><i class="tech-logo logo-supabase"></i> Supabase</span>
+          </div>
+        </article>
+
+        <article class="bento-card">
+          <p class="bento-label">Proyecto SaaS en Producción</p>
+          <h2 class="bento-title">VENPOX · Sistema SaaS para Puntos de Venta (POS)</h2>
+          <p style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 0.75rem;">
+            Plataforma SaaS en la nube para gestión de inventario, ventas, compras, clientes y reportes; próxima a escalar a operaciones multibodega y en mejora visual continua.
+          </p>
+          <a href="projects.html" class="btn btn-outline" style="width: 100%;">Explorar caso de estudio</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Fila Inferior del Bento: 3 Áreas de Especialidad -->
+    <section class="section" style="padding-top: 0.5rem;">
+      <div class="section-header">
+        <h2 class="section-title">Soluciones eficientes y mejora continua</h2>
+        <p class="section-subtitle">
+          Enfoque en buenas prácticas, arquitectura de software, integridad de datos y cumplimiento de objetivos.
+        </p>
+      </div>
+
+      <div class="highlights-grid">
+        <article class="highlight-card">
+          <div class="highlight-top">
+            <i class="tech-logo logo-react"></i>
+            <i class="tech-logo logo-node"></i>
+          </div>
+          <h3 class="highlight-title">Desarrollo Web & APIs</h3>
+          <p>
+            Construcción de aplicaciones web, dashboards y herramientas internas participando en frontend
+            (HTML, CSS, JavaScript, React, TypeScript) y backend (Node.js, Express, PHP, APIs REST).
+          </p>
+        </article>
+
+        <article class="highlight-card">
+          <div class="highlight-top">
+            <i class="tech-logo logo-oracle"></i>
+            <i class="tech-logo logo-mysql"></i>
+          </div>
+          <h3 class="highlight-title">Bases de Datos & Billing</h3>
+          <p>
+            Programación avanzada en Oracle SQL y PL/SQL (procedimientos almacenados, packages) y soporte
+            a sistemas críticos de facturación electrónica corporativa.
+          </p>
+        </article>
+
+        <article class="highlight-card">
+          <div class="highlight-top">
+            <i class="tech-logo logo-linux"></i>
+            <i class="tech-logo logo-power"></i>
+          </div>
+          <h3 class="highlight-title">Automatización & Linux</h3>
+          <p>
+            Automatización de tareas y monitoreo mediante scripts en Linux/Shell, Automation Anywhere,
+            Power Apps y Power Automate bajo metodologías ágiles (Scrum).
+          </p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====================================================================
+       PIE DE PÁGINA (Idéntico en las 5 páginas)
+       ==================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© <span id="current-year"></span> <strong>Bryan Roberto Zumba Molleturo</strong>. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Script global compartido -->
+  <script src="js/main.js"></script>
+</body>
+
+</html>

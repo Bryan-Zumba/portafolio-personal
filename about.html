@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre mí | Bryan Zumba - Ingeniero en Sistemas</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+
+<body>
+
+  <!-- ====================================================================
+       ENCABEZADO Y MENÚ DE NAVEGACIÓN (Idéntico en las 5 páginas)
+       ==================================================================== -->
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Navegación principal">
+      <a href="index.html" class="logo">Mi Portafolio</a>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <i class="icon icon-menu" aria-hidden="true"></i>
+      </button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link">Inicio</a></li>
+        <li><a href="about.html" class="nav-link active">Sobre mí</a></li>
+        <li><a href="skills.html" class="nav-link">Habilidades</a></li>
+        <li><a href="projects.html" class="nav-link">Proyectos</a></li>
+        <li><a href="contact.html" class="nav-link">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ====================================================================
+       CONTENIDO PRINCIPAL DE LA PÁGINA "SOBRE MÍ"
+       ==================================================================== -->
+  <main class="container section">
+    <div class="section-header">
+      <h1 class="section-title">Sobre mí y mi trayectoria</h1>
+      <p class="section-subtitle">
+        Ingeniero en Sistemas de Información enfocado en el desarrollo de software, bases de datos y automatización.
+      </p>
+    </div>
+
+    <!-- Franja Superior de Credenciales Clave -->
+    <div class="credentials-strip">
+      <article class="credential-card">
+        <span class="credential-kicker">Educación Superior</span>
+        <h2 class="credential-title">Ingeniería en Sistemas de Información</h2>
+        <p class="credential-sub">Universidad Estatal de Guayaquil</p>
+      </article>
+
+      <article class="credential-card">
+        <span class="credential-kicker">Certificación Internacional (2024 - 2028)</span>
+        <h2 class="credential-title">Essential Automation Certification</h2>
+        <p class="credential-sub"><i class="tech-logo logo-automation"></i> Automation Anywhere</p>
+      </article>
+
+      <article class="credential-card">
+        <span class="credential-kicker">Perfil & Ubicación</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.15rem;">
+          <span class="badge"><i class="icon icon-location" aria-hidden="true"></i> Cdla. Puertas del Sol, Guayaquil</span>
+          <span class="badge"><i class="icon icon-globe" aria-hidden="true"></i> Inglés: Nivel Medio</span>
+          <span class="badge"><i class="icon icon-bolt" aria-hidden="true"></i> Metodología Scrum</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Contenido Principal en 2 Columnas Asimétricas -->
+    <div class="about-grid">
+      <!-- Columna izquierda: Biografía y Cursos -->
+      <article class="about-card">
+        <h3>¿Quién soy?</h3>
+        <p>
+          Soy <strong>Bryan Roberto Zumba Molleturo</strong>, Ingeniero en Sistemas de Información. Cuento con experiencia en desarrollo de software y
+          soluciones web, participando activamente en frontend, backend, APIs REST y gestión de bases de datos.
+        </p>
+        <p>
+          Mi motivación se centra en afrontar nuevos retos, fortalecer continuamente mis conocimientos y aportar
+          soluciones eficientes con enfoque en buenas prácticas, arquitectura hexagonal, patrones de diseño y mejora
+          continua. Destaco por mi capacidad de aprendizaje, trabajo en equipo y responsabilidad en el cumplimiento
+          de los objetivos asignados.
+        </p>
+
+        <h3 style="margin-top: 1.5rem;">Cursos Especializados</h3>
+        <div class="timeline-list">
+          <div class="timeline-item">
+            <span class="timeline-date"><i class="tech-logo logo-mongodb"></i> MongoDB University</span>
+            <h4 class="timeline-role">Modelado Documental y Arquitectura</h4>
+            <p class="timeline-place">
+              • From Relational Model (SQL) to MongoDB's Document Model<br>
+              • MongoDB Overview: Core Concepts and Architecture
+            </p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-date">Fundación Telefónica Movistar Ecuador</span>
+            <h4 class="timeline-role">Agilidad, Gobierno TI y Ciberseguridad</h4>
+            <p class="timeline-place">
+              • Gestión de Proyectos con Metodologías Ágiles y Enfoques Lean<br>
+              • Gobierno y Gestión de la Seguridad de la Información<br>
+              • Introducción a Ciberseguridad
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.35rem;">
+          <a href="assets/docs/Currículum Vitae Bryan Zumba.pdf" download class="btn btn-primary">
+            </i> Descargar CV (PDF)
+          </a>
+        </div>
+      </article>
+
+      <!-- Columna derecha: Línea de tiempo de Experiencia Laboral Real -->
+      <article class="about-card">
+        <h3>Experiencia Profesional</h3>
+        <div class="timeline-list">
+          <div class="timeline-item">
+            <span class="timeline-date">Septiembre 2025 - Actualidad</span>
+            <h4 class="timeline-role">Ingeniero de Proyectos Junior - Desarrollo de Software y Billing</h4>
+            <p class="timeline-place"><strong>Hitss</strong></p>
+            <p style="margin-top: 0.35rem;">
+              Desarrollo de soluciones web, dashboards y herramientas internas (frontend y backend); creación e
+              integración de APIs REST; programación de procedimientos almacenados y packages en Oracle PL/SQL para
+              sistemas de facturación; automatización de tareas con scripts en Linux/Shell y Power Platform.
+            </p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-date">Mayo 2025 - Agosto 2025</span>
+            <h4 class="timeline-role">Soporte de Operaciones N1 (Pasante)</h4>
+            <p class="timeline-place"><strong>Hitss</strong></p>
+            <p style="margin-top: 0.35rem;">
+              Atención y resolución de incidentes de primer nivel mediante análisis técnico y consultas SQL;
+              verificación de integridad de registros en entornos de facturación (Billing) y continuidad operativa.
+            </p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-date">Enero 2025 - Marzo 2025</span>
+            <h4 class="timeline-role">Analista de Soporte y Desarrollo (Pasante) - Dirección de TIC's</h4>
+            <p class="timeline-place"><strong>ARCSA</strong> (Agencia Nacional de Regulación, Control y Vigilancia
+              Sanitaria)</p>
+            <p style="margin-top: 0.35rem;">
+              Desarrollo e integración de un sistema CRUD en PHP y MySQL para la intranet institucional. Soporte
+              técnico de hardware, software y redes, gestión de tickets en GLPI, administración de correo
+              (Zimbra/Outlook) e inventario en OwnCloud.
+            </p>
+          </div>
+
+          <div class="timeline-item">
+            <span class="timeline-date">2022 - 2024</span>
+            <h4 class="timeline-role">Encargado de Inventario y Balance</h4>
+            <p class="timeline-place"><strong>Asociación Turística "Las Rocas"</strong> (Comuna San Miguel - Naranjal)
+            </p>
+            <p style="margin-top: 0.35rem;">
+              Gestión de inventarios mensuales, análisis de productos y ventas, control de ingresos/egresos y
+              elaboración de balances financieros para optimizar la rentabilidad.
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- ====================================================================
+       PIE DE PÁGINA (Idéntico en las 5 páginas)
+       ==================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© <span id="current-year"></span> <strong>Bryan Roberto Zumba Molleturo</strong>. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>

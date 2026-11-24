@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyectos | Bryan Zumba - Ingeniero en Sistemas</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- ====================================================================
+       ENCABEZADO Y MENÚ DE NAVEGACIÓN (Idéntico en las 5 páginas)
+       ==================================================================== -->
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Navegación principal">
+      <a href="index.html" class="logo">Mi Portafolio</a>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <i class="icon icon-menu" aria-hidden="true"></i>
+      </button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link">Inicio</a></li>
+        <li><a href="about.html" class="nav-link">Sobre mí</a></li>
+        <li><a href="skills.html" class="nav-link">Habilidades</a></li>
+        <li><a href="projects.html" class="nav-link active">Proyectos</a></li>
+        <li><a href="contact.html" class="nav-link">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ====================================================================
+       CONTENIDO PRINCIPAL DE LA PÁGINA "PROYECTOS" (SHOWCASE CON CARRUSEL)
+       ==================================================================== -->
+  <main class="container section">
+    <div class="section-header">
+      <h1 class="section-title">Proyectos Destacados</h1>
+      <p class="section-subtitle">
+        Soluciones de software, arquitectura SaaS y plataformas web desarrolladas con enfoque modular y escalable.
+      </p>
+    </div>
+
+    <div class="projects-grid">
+      <!-- Proyecto VENPOX en formato Caso de Estudio Horizontal con Carrusel -->
+      <article class="project-card showcase-card">
+        <!-- Columna Izquierda: Marco de ventana con Carrusel de Capturas -->
+        <div class="project-preview-frame" id="venpox-carousel">
+          <div class="window-bar">
+            <span class="window-dot"></span>
+            <span class="window-dot"></span>
+            <span class="window-dot"></span>
+            <span class="window-url" id="carousel-window-title">venpox.vercel.app · Catálogo de Ventas (POS)</span>
+            <span class="carousel-counter" id="carousel-counter">1 / 4</span>
+          </div>
+
+          <!-- Carrusel de imágenes: 4 vistas principales de VENPOX -->
+          <div class="project-carousel">
+            <button type="button" class="carousel-btn prev" aria-label="Imagen anterior">
+              <i class="icon icon-chevron-left" aria-hidden="true"></i>
+            </button>
+
+            <div class="carousel-track">
+              <!-- Captura 1: Catálogo de ventas POS (VENPOX.png) -->
+              <div class="carousel-slide active">
+                <img
+                  src="assets/img/VENPOX.png"
+                  alt="Catálogo de Ventas (POS)"
+                  data-description="Interfaz que centraliza la selección de productos y servicios mediante búsqueda, ordenamiento, visualización de disponibilidad y carrito de compras integrado, agilizando la generación de ventas desde una única pantalla."
+                  class="project-img"
+                >
+              </div>
+
+              <!-- Captura 2: Catálogo Público y Pedidos por WhatsApp (OrdenarCatalogoPublico.png) -->
+              <div class="carousel-slide">
+                <img
+                  src="assets/img/OrdenarCatalogoPublico.png"
+                  alt="Catálogo Público y Pedidos por WhatsApp"
+                  data-description="Tienda pública en línea sincronizada con el negocio que permite a los clientes filtrar por categorías, armar su pedido, registrar sus datos (o Consumidor Final) y enviar la orden directo al WhatsApp del comercio."
+                  class="project-img"
+                >
+              </div>
+
+              <!-- Captura 3: Existencias en Inventario (InventarioVenpox.png) -->
+              <div class="carousel-slide">
+                <img
+                  src="assets/img/InventarioVenpox.png"
+                  alt="Existencias en Inventario y Control de Stock"
+                  data-description="Panel de consulta en tiempo real del stock físico, disponible y reservado de la mercadería, conectado con la configuración de bodega, gestión de ítems y monitoreo de estados."
+                  class="project-img"
+                >
+              </div>
+
+              <!-- Captura 4: Balance y Reportes Consolidados (ReportesVenpox.png) -->
+              <div class="carousel-slide">
+                <img
+                  src="assets/img/ReportesVenpox.png"
+                  alt="Balance, Finanzas y Reportes Consolidados"
+                  data-description="Módulo de análisis de rendimiento (Ventas, Compras, Inventario y Financiero) con filtros por período contable y bodega, cálculo automático de inversión/utilidad y exportación formal a PDF y Excel."
+                  class="project-img"
+                >
+              </div>
+            </div>
+
+            <button type="button" class="carousel-btn next" aria-label="Siguiente imagen">
+              <i class="icon icon-chevron-right" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <!-- Puntos indicadores generados automáticamente por JS -->
+          <div class="carousel-dots" id="carousel-dots"></div>
+
+          <!-- Pie descriptivo que cambia dinámicamente según la imagen activa del carrusel -->
+          <div class="project-img-caption" id="carousel-caption">
+            <strong>Catálogo de Ventas (POS):</strong> Interfaz que centraliza la selección de productos y servicios
+            mediante búsqueda, ordenamiento, visualización de disponibilidad y carrito de compras integrado, agilizando
+            la generación de ventas desde una única pantalla.
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Ficha principal, stack con logos y botones -->
+        <div class="project-body">
+          <span class="project-kicker">Sistema SaaS para la Gestión de Puntos de Venta (POS)</span>
+          <h3 class="project-title">VENPOX</h3>
+          <p class="project-desc">
+            Plataforma SaaS para la gestión de puntos de venta, diseñada para centralizar y optimizar las operaciones
+            comerciales desde una aplicación web en la nube. Desarrollada con una arquitectura modular y escalable,
+            integra un modelo de datos sólido y mecanismos de autenticación y seguridad que favorecen la confiabilidad
+            y el mantenimiento del sistema. Actualmente se encuentra próxima a escalar hacia operaciones multibodega,
+            acompañada de mejoras continuas en su aspecto visual y experiencia de usuario.
+          </p>
+
+          <!-- Tecnologías con sus logos oficiales -->
+          <div class="project-tags">
+            <span class="badge"><i class="tech-logo logo-react"></i> React</span>
+            <span class="badge"><i class="tech-logo logo-node"></i> Node.js</span>
+            <span class="badge"><i class="tech-logo logo-ts"></i> TypeScript</span>
+            <span class="badge"><i class="tech-logo logo-supabase"></i> Supabase</span>
+          </div>
+
+          <div class="project-links">
+            <a href="https://venpox.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              Visitar Proyecto
+            </a>
+            <button type="button" class="btn btn-outline" id="toggle-project-details" aria-expanded="false">
+              Consultar detalles
+            </button>
+            <a
+              href="https://wa.me/593986520267?text=Hola%20Bryan,%20vi%20tu%20proyecto%20VENPOX,%20quisiera%20saber%20m%C3%A1s%20informaci%C3%B3n%20y%20consultar%20si%20es%20posible%20experimentarlo."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline"
+            >
+              Solicitar información
+            </a>
+          </div>
+        </div>
+
+        <!-- Panel Desplegable de "Consultar detalles" (Arquitectura, Módulos y Aptitudes de LinkedIn) -->
+        <div class="project-details-drawer" id="project-details-drawer">
+          <div class="details-drawer-grid">
+            <div class="details-col">
+              <h4>Ecosistema Modular de VENPOX</h4>
+              <p>
+                Además de las 4 vistas del carrusel, la plataforma abarca el ciclo comercial completo sin perder simplicidad operativa:
+              </p>
+              <p style="margin-top: 0.4rem;">
+                • <strong>Ventas, Caja y Tienda Pública:</strong> POS interno, historial, turnos de caja y catálogo público con pedidos por WhatsApp.<br>
+                • <strong>Inventario, Bodega y Compras:</strong> Categorías, ítems, configuración de bodega (en transición a soporte multibodega), stock físico/reservado y compras.<br>
+                • <strong>Finanzas y Reportes:</strong> Movimientos de caja, períodos contables, cálculo de utilidad y exportación a PDF/Excel.<br>
+                • <strong>Directorio y Seguridad:</strong> Proveedores, clientes, usuarios, consulta de roles y panel de administración multiempresa.
+              </p>
+            </div>
+
+            <div class="details-col">
+              <h4>Aptitudes Aplicadas en este Proyecto</h4>
+              <div class="tech-Wall">
+                <span class="badge">Desarrollo Full Stack</span>
+                <span class="badge">Arquitectura de software</span>
+                <span class="badge">Administración de bases de datos</span>
+                <span class="badge">Base de datos relacional</span>
+                <span class="badge">Ingeniería de control de calidad</span>
+                <span class="badge">Depuración de programas</span>
+                <span class="badge">Control de versiones</span>
+                <span class="badge">Scrum</span>
+                <span class="badge">Gestión de proyectos</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- ====================================================================
+       PIE DE PÁGINA (Idéntico en las 5 páginas)
+       ==================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© <span id="current-year"></span> <strong>Bryan Roberto Zumba Molleturo</strong>. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

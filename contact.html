@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto | Bryan Zumba - Ingeniero en Sistemas</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+
+  <!-- ====================================================================
+       ENCABEZADO Y MENÚ DE NAVEGACIÓN (Idéntico en las 5 páginas)
+       ==================================================================== -->
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Navegación principal">
+      <a href="index.html" class="logo">Mi Portafolio</a>
+
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú" aria-expanded="false">
+        <i class="icon icon-menu" aria-hidden="true"></i>
+      </button>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link">Inicio</a></li>
+        <li><a href="about.html" class="nav-link">Sobre mí</a></li>
+        <li><a href="skills.html" class="nav-link">Habilidades</a></li>
+        <li><a href="projects.html" class="nav-link">Proyectos</a></li>
+        <li><a href="contact.html" class="nav-link active">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ====================================================================
+       CONTENIDO PRINCIPAL DE LA PÁGINA "CONTACTO" (BENTO SOBRIO E INTEGRADO)
+       ==================================================================== -->
+  <main class="container section">
+    <div class="section-header">
+      <h1 class="section-title">Hablemos sobre tu próximo proyecto</h1>
+      <p class="section-subtitle">
+        Puedes contactarme directamente por WhatsApp, conectar conmigo en LinkedIn o enviarme un correo electrónico.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Columna Izquierda: Tarjetas Bento Compactas de Contacto Directo -->
+      <div class="contact-channels">
+        <!-- Canal 1: WhatsApp -->
+        <article class="channel-card">
+          <div class="channel-header">
+            <div class="channel-icon icon-whatsapp"><i class="icon icon-whatsapp" aria-hidden="true"></i></div>
+            <div>
+              <h3 class="channel-title">WhatsApp</h3>
+              <p class="channel-value">0986520267 (+593 98 652 0267)</p>
+            </div>
+          </div>
+          <div class="channel-actions">
+            <a
+              href="https://wa.me/593986520267?text=Hola%20Bryan,%20vi%20tu%20portafolio%20web%20y%20me%20gustar%C3%ADa%20contactarte."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-channel"
+            >
+              Iniciar chat
+            </a>
+          </div>
+        </article>
+
+        <!-- Canal 2: LinkedIn -->
+        <article class="channel-card">
+          <div class="channel-header">
+            <div class="channel-icon icon-linkedin"><i class="icon icon-linkedin" aria-hidden="true"></i></div>
+            <div>
+              <h3 class="channel-title">LinkedIn</h3>
+              <p class="channel-value">linkedin.com/in/bryan-zumba</p>
+            </div>
+          </div>
+          <div class="channel-actions">
+            <a
+              href="https://www.linkedin.com/in/bryan-zumba"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-channel"
+            >
+              Ver perfil
+            </a>
+          </div>
+        </article>
+
+        <!-- Canal 3: Correo Electrónico -->
+        <article class="channel-card">
+          <div class="channel-header">
+            <div class="channel-icon icon-email"><i class="icon icon-mail" aria-hidden="true"></i></div>
+            <div>
+              <h3 class="channel-title">Correo Electrónico</h3>
+              <p class="channel-value" id="email-text">zumbabryan69@gmail.com</p>
+            </div>
+          </div>
+          <div class="channel-actions">
+            <a href="mailto:zumbabryan69@gmail.com?subject=Contacto%20desde%20Portafolio%20Web" class="btn-channel">
+              Redactar
+            </a>
+            <button type="button" id="copy-email-btn" class="btn-channel btn-copy">
+              Copiar
+            </button>
+          </div>
+        </article>
+
+        <!-- Módulo Bento de Ubicación y Disponibilidad -->
+        <article class="bento-card">
+          <p class="bento-label">Ubicación y Disponibilidad</p>
+          <h3 class="bento-title" style="margin-bottom: 0.35rem;">Guayaquil, Ecuador</h3>
+          <p style="font-size: 12px; color: var(--color-text-muted);">
+            Cdla. Puertas del Sol · Disponible para proyectos de desarrollo web, integración de APIs, bases de datos Oracle/SQL y automatización.
+          </p>
+        </article>
+      </div>
+
+      <!-- Columna Derecha: Formulario Interactivo con JS -->
+      <article class="contact-form-card">
+        <h3>Envíame un mensaje directo</h3>
+        <p>Completa el formulario y elige si deseas enviarlo a mi correo o directo a mi WhatsApp.</p>
+
+        <form id="contact-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Nombre completo</label>
+              <input type="text" id="name" class="form-control" placeholder="Ej. Andrea Intriago" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Tu correo electrónico</label>
+              <input type="email" id="email" class="form-control" placeholder="Ej. nombre@empresa.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Asunto</label>
+            <input type="text" id="subject" class="form-control" placeholder="Ej. Oportunidad de proyecto / Desarrollo Web" required>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Mensaje</label>
+            <textarea id="message" class="form-control" placeholder="Escribe aquí los detalles..." required></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              Enviar por Correo
+            </button>
+            <button type="button" id="send-whatsapp-btn" class="btn btn-outline">
+              Enviar por WhatsApp
+            </button>
+          </div>
+
+          <!-- Caja para mostrar alertas de validación con JavaScript -->
+          <div id="form-feedback" class="form-feedback" role="alert"></div>
+        </form>
+      </article>
+    </div>
+  </main>
+
+  <!-- ====================================================================
+       PIE DE PÁGINA (Idéntico en las 5 páginas)
+       ==================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© <span id="current-year"></span> <strong>Bryan Roberto Zumba Molleturo</strong>. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts: global + lógica específica de contacto -->
+  <script src="js/main.js"></script>
+  <script src="js/contact.js"></script>
+</body>
+</html>
