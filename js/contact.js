@@ -1,6 +1,6 @@
 /* ==========================================================================
    CONTACT.JS - Lógica exclusiva de la página de Contacto (contact.html)
-   1. Copiar dirección de correo al portapapeles con un clic
+   1. Copiar dirección de correo y teléfono al portapapeles con Toast flotante
    2. Validar los campos del formulario
    3. Enviar el mensaje armado directamente por WhatsApp o Correo (sin backend)
    ========================================================================== */
@@ -13,22 +13,67 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // ------------------------------------------------------------------------
-  // 1. BOTÓN PARA COPIAR CORREO AL PORTAPAPELES
+  // 1. COPIAR CORREO Y TELÉFONO AL PORTAPAPELES (+ FALLBACK PARA FILE://)
   // ------------------------------------------------------------------------
+  function copyTextToClipboard(text, buttonEl, successBtnLabel, toastMessage) {
+    const onSuccess = () => {
+      if (buttonEl) {
+        const originalText = buttonEl.dataset.originalText || buttonEl.textContent;
+        buttonEl.dataset.originalText = originalText;
+        buttonEl.textContent = successBtnLabel;
+
+        clearTimeout(buttonEl._copyTimer);
+        buttonEl._copyTimer = setTimeout(() => {
+          buttonEl.textContent = originalText;
+        }, 2000);
+      }
+
+      if (typeof window.showGlassToast === 'function') {
+        window.showGlassToast(toastMessage);
+      }
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(onSuccess).catch(() => {
+        fallbackCopy(text, onSuccess);
+      });
+    } else {
+      fallbackCopy(text, onSuccess);
+    }
+  }
+
+  function fallbackCopy(text, callback) {
+    const tempInput = document.createElement('textarea');
+    tempInput.value = text;
+    tempInput.setAttribute('readonly', '');
+    tempInput.style.position = 'absolute';
+    tempInput.style.left = '-9999px';
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    try {
+      document.execCommand('copy');
+      callback();
+    } catch (_) {
+      // Si el navegador bloquea la copia automática, no rompe la ejecución
+    }
+    document.body.removeChild(tempInput);
+  }
+
   const copyEmailBtn = document.getElementById('copy-email-btn');
   const emailTextElement = document.getElementById('email-text');
 
   if (copyEmailBtn && emailTextElement) {
     copyEmailBtn.addEventListener('click', () => {
       const emailToCopy = emailTextElement.textContent.trim();
+      copyTextToClipboard(emailToCopy, copyEmailBtn, '¡Copiado!', 'Correo copiado al portapapeles');
+    });
+  }
 
-      navigator.clipboard.writeText(emailToCopy).then(() => {
-        const originalText = copyEmailBtn.textContent;
-        copyEmailBtn.textContent = '¡Correo copiado!';
-        setTimeout(() => {
-          copyEmailBtn.textContent = originalText;
-        }, 2000);
-      });
+  const copyPhoneBtn = document.getElementById('copy-phone-btn');
+  if (copyPhoneBtn) {
+    copyPhoneBtn.addEventListener('click', () => {
+      const phoneToCopy = copyPhoneBtn.getAttribute('data-copy') || '0986520267';
+      copyTextToClipboard(phoneToCopy, copyPhoneBtn, '¡Copiado!', 'Número copiado al portapapeles');
     });
   }
 

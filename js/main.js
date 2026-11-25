@@ -1,14 +1,19 @@
 /* ==========================================================================
    MAIN.JS - Lógica Compartida en Todas las Páginas
    1. Control del menú desplegable en móviles con iconos <i>
-   2. Resaltado automático del enlace activo en la barra de navegación
+   2. Resaltado automático del enlace activo y transición suave entre páginas
    3. Año actual dinámico en el pie de página
-   4. Brillo especular interactivo Liquid Glass al mover el cursor
+   4. Brillo especular interactivo Liquid Glass y helper global de Toast
    5. Animación Scroll Reveal escalonada con IntersectionObserver
-   6. Visor Lightbox en Cristal Líquido para ampliar capturas de proyectos
+   6. Visor Lightbox mejorado (flechas internas, contador, teclado y swipe)
+   7. Panel desplegable "Consultar detalles" en projects.html
+   8. Carrusel interactivo con soporte táctil (Swipe) y teclado
+   9. Robot de cuerpo completo con física Lerp (requestAnimationFrame) y scroll
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // ------------------------------------------------------------------------
   // 1. MENÚ RESPONSIVO (Móviles) USANDO ELEMENTO <i class="icon ..."></i>
   // ------------------------------------------------------------------------
@@ -27,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ------------------------------------------------------------------------
-  // 2. RESALTADO AUTOMÁTICO DE LA PÁGINA ACTIVA EN EL MENÚ
+  // 2. RESALTADO AUTOMÁTICO Y TRANSICIÓN SUAVE ENTRE PÁGINAS
   // ------------------------------------------------------------------------
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
   const navLinks = document.querySelectorAll('.nav-link');
@@ -41,21 +46,60 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Limpia la clase si el usuario vuelve con el botón "Atrás" del navegador
+  window.addEventListener('pageshow', () => {
+    document.body.classList.remove('page-leaving');
+  });
+
+  if (!prefersReducedMotion) {
+    document.querySelectorAll('a[href]').forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        const href = anchor.getAttribute('href');
+        const target = anchor.getAttribute('target');
+        const isDownload = anchor.hasAttribute('download');
+
+        if (
+          !href ||
+          target === '_blank' ||
+          isDownload ||
+          href.startsWith('#') ||
+          href.startsWith('mailto:') ||
+          href.startsWith('tel:') ||
+          href.startsWith('http') ||
+          e.ctrlKey ||
+          e.metaKey ||
+          e.shiftKey ||
+          e.altKey
+        ) {
+          return;
+        }
+
+        // Evita recargar si ya está en la misma ruta exacta
+        if (href === currentPath) return;
+
+        e.preventDefault();
+        document.body.classList.add('page-leaving');
+        setTimeout(() => {
+          window.location.href = href;
+        }, 155);
+      });
+    });
+  }
+
   // ------------------------------------------------------------------------
   // 3. FUNCIÓN PARA ACTUALIZAR EL AÑO AUTOMÁTICAMENTE EN EL FOOTER
   // ------------------------------------------------------------------------
   function updateFooterYear() {
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
-      const currentYear = new Date().getFullYear();
-      yearSpan.textContent = currentYear;
+      yearSpan.textContent = new Date().getFullYear();
     }
   }
 
   updateFooterYear();
 
   // ------------------------------------------------------------------------
-  // 4. REFLEJO ESPECULAR INTERACTIVO LIQUID GLASS
+  // 4. REFLEJO ESPECULAR LIQUID GLASS + NOTIFICACIÓN TOAST GLOBAL
   // ------------------------------------------------------------------------
   const glassCards = document.querySelectorAll(
     '.bento-card, .highlight-card, .about-card, .credential-card, .skill-category, .project-card, .channel-card, .contact-form-card'
@@ -71,22 +115,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  let toastTimer = null;
+  window.showGlassToast = function showGlassToast(message) {
+    let toast = document.getElementById('glass-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'glass-toast';
+      toast.className = 'glass-toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      toast.innerHTML = '<i class="icon icon-check" aria-hidden="true"></i><span></span>';
+      document.body.appendChild(toast);
+    }
+
+    const textSpan = toast.querySelector('span');
+    if (textSpan) textSpan.textContent = message;
+
+    toast.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toast.classList.remove('visible');
+    }, 2400);
+  };
+
   // ------------------------------------------------------------------------
   // 5. ANIMACIÓN SCROLL REVEAL ESCALONADA (IntersectionObserver)
-  // Hace que los módulos y tarjetas aparezcan suavemente al entrar en pantalla
   // ------------------------------------------------------------------------
   const revealElements = document.querySelectorAll(
     '.section-header, .bento-card, .highlight-card, .credential-card, .about-card, .skill-category, .project-card, .channel-card, .contact-form-card, .tech-item-card'
   );
 
-  revealElements.forEach((el, index) => {
-    el.classList.add('reveal-item');
-    // Retraso escalonado suave para elementos cercanos
-    const delay = (index % 6) * 55;
-    el.style.transitionDelay = `${delay}ms`;
-  });
+  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+    revealElements.forEach((el) => el.classList.add('reveal-visible'));
+  } else {
+    revealElements.forEach((el, index) => {
+      el.classList.add('reveal-item');
+      const delay = (index % 6) * 55;
+      el.style.transitionDelay = `${delay}ms`;
+    });
 
-  if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver(
       (entries, observer) => {
         entries.forEach((entry) => {
@@ -100,98 +167,14 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     revealElements.forEach((el) => revealObserver.observe(el));
-  } else {
-    revealElements.forEach((el) => el.classList.add('reveal-visible'));
   }
 
   // ------------------------------------------------------------------------
-  // 6. VISOR LIGHTBOX PARA AMPLIAR CAPTURAS DE PROYECTOS (ej. VENPOX.png)
-  // Al hacer clic en cualquier imagen con clase .project-img, abre un modal
-  // ------------------------------------------------------------------------
-  const projectImages = document.querySelectorAll('.project-img');
-
-  if (projectImages.length > 0) {
-    // Crear el contenedor del modal dinámicamente con JS puro
-    const lightbox = document.createElement('div');
-    lightbox.className = 'lightbox-overlay';
-    lightbox.setAttribute('role', 'dialog');
-    lightbox.setAttribute('aria-modal', 'true');
-    lightbox.innerHTML = `
-      <div class="lightbox-content">
-        <div class="lightbox-header">
-          <span class="lightbox-caption" id="lightbox-caption">Vista previa del proyecto</span>
-          <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Cerrar vista ampliada">
-            <i class="icon icon-close" aria-hidden="true"></i>
-          </button>
-        </div>
-        <img src="" alt="" class="lightbox-img" id="lightbox-img">
-        <p class="lightbox-desc" id="lightbox-desc"></p>
-      </div>
-    `;
-    document.body.appendChild(lightbox);
-
-    const lightboxImg = document.getElementById('lightbox-img');
-    const lightboxCaption = document.getElementById('lightbox-caption');
-    const lightboxDesc = document.getElementById('lightbox-desc');
-    const lightboxClose = document.getElementById('lightbox-close');
-
-    // Función para abrir el modal con la imagen seleccionada y su descripción
-    projectImages.forEach((img) => {
-      img.setAttribute('title', 'Haz clic para ampliar la imagen');
-      img.addEventListener('click', () => {
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-        lightboxCaption.textContent = img.alt || 'Vista previa del proyecto';
-        const extraDesc = img.getAttribute('data-description');
-        if (lightboxDesc) {
-          lightboxDesc.textContent = extraDesc || '';
-          lightboxDesc.style.display = extraDesc ? 'block' : 'none';
-        }
-        lightbox.classList.add('open');
-      });
-    });
-
-    // Función para cerrar el modal
-    const closeLightbox = () => {
-      lightbox.classList.remove('open');
-    };
-
-    lightboxClose.addEventListener('click', closeLightbox);
-
-    // Cerrar al hacer clic fuera de la tarjeta (en el fondo oscuro desenfocado)
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        closeLightbox();
-      }
-    });
-
-    // Cerrar con la tecla Escape del teclado
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && lightbox.classList.contains('open')) {
-        closeLightbox();
-      }
-    });
-  }
-
-  // ------------------------------------------------------------------------
-  // 7. BOTÓN "CONSULTAR DETALLES" DESPLEGABLE EN PROJECTS.HTML
-  // ------------------------------------------------------------------------
-  const toggleDetailsBtn = document.getElementById('toggle-project-details');
-  const detailsDrawer = document.getElementById('project-details-drawer');
-
-  if (toggleDetailsBtn && detailsDrawer) {
-    toggleDetailsBtn.addEventListener('click', () => {
-      const isOpen = detailsDrawer.classList.toggle('open');
-      toggleDetailsBtn.setAttribute('aria-expanded', isOpen);
-      toggleDetailsBtn.textContent = isOpen ? 'Ocultar detalles' : 'Consultar detalles';
-    });
-  }
-
-  // ------------------------------------------------------------------------
-  // 8. CARRUSEL INTERACTIVO DE IMÁGENES DEL PROYECTO (projects.html)
-  // Actualiza imagen activa, puntos indicadores, contador y descripción
+  // 6 & 8. CARRUSEL INTERACTIVO + VISOR LIGHTBOX SINCRONIZADOS
+  // Soporta flechas dentro del Lightbox, teclado (←/→/Esc) y swipe táctil
   // ------------------------------------------------------------------------
   const carouselFrame = document.getElementById('venpox-carousel');
+  let carouselApi = null;
 
   if (carouselFrame) {
     const slides = carouselFrame.querySelectorAll('.carousel-slide');
@@ -201,9 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const captionBox = document.getElementById('carousel-caption');
     const windowTitle = document.getElementById('carousel-window-title');
     const counterBadge = document.getElementById('carousel-counter');
+    const carouselBox = carouselFrame.querySelector('.project-carousel');
     let currentSlide = 0;
 
-    // Generar dinámicamente un punto indicador por cada imagen en el HTML
     if (dotsContainer && slides.length > 1) {
       slides.forEach((_, index) => {
         const dot = document.createElement('button');
@@ -221,13 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
       slides[currentSlide].classList.remove('active');
       if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
 
-      // Ciclo infinito hacia adelante o hacia atrás
       currentSlide = (index + slides.length) % slides.length;
 
       slides[currentSlide].classList.add('active');
       if (dots[currentSlide]) dots[currentSlide].classList.add('active');
 
-      // Actualizar texto descriptivo y barra de ventana con los atributos de la imagen activa
       const activeImg = slides[currentSlide].querySelector('img');
       if (activeImg) {
         const title = activeImg.getAttribute('alt') || 'Vista del proyecto';
@@ -252,11 +233,191 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nextBtn) {
       nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
     }
+
+    // Deslizamiento táctil (Swipe) en el carrusel para celulares
+    if (carouselBox && slides.length > 1) {
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      carouselBox.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+      }, { passive: true });
+
+      carouselBox.addEventListener('touchend', (e) => {
+        const diffX = e.changedTouches[0].clientX - touchStartX;
+        const diffY = e.changedTouches[0].clientY - touchStartY;
+
+        if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+          if (diffX < 0) goToSlide(currentSlide + 1);
+          else goToSlide(currentSlide - 1);
+        }
+      }, { passive: true });
+    }
+
+    carouselApi = {
+      goToSlide,
+      getCurrentIndex: () => currentSlide
+    };
+  }
+
+  // Visor Lightbox mejorado (flechas internas, contador y swipe)
+  const projectImages = Array.from(document.querySelectorAll('.project-img'));
+
+  if (projectImages.length > 0) {
+    let lightboxIndex = 0;
+    const hasMultiple = projectImages.length > 1;
+
+    const lightbox = document.createElement('div');
+    lightbox.className = 'lightbox-overlay';
+    lightbox.setAttribute('role', 'dialog');
+    lightbox.setAttribute('aria-modal', 'true');
+    lightbox.innerHTML = `
+      <div class="lightbox-content" id="lightbox-content">
+        <div class="lightbox-header">
+          <div class="lightbox-meta">
+            <span class="lightbox-counter" id="lightbox-counter">1 / ${projectImages.length}</span>
+            <span class="lightbox-caption" id="lightbox-caption">Vista previa del proyecto</span>
+          </div>
+          <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Cerrar vista ampliada">
+            <i class="icon icon-close" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="lightbox-stage">
+          <button type="button" class="lightbox-nav prev" id="lightbox-prev" aria-label="Captura anterior" ${hasMultiple ? '' : 'hidden'}>
+            <i class="icon icon-chevron-left" aria-hidden="true"></i>
+          </button>
+          <img src="" alt="" class="lightbox-img" id="lightbox-img">
+          <button type="button" class="lightbox-nav next" id="lightbox-next" aria-label="Siguiente captura" ${hasMultiple ? '' : 'hidden'}>
+            <i class="icon icon-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+        <p class="lightbox-desc" id="lightbox-desc"></p>
+      </div>
+    `;
+    document.body.appendChild(lightbox);
+
+    const lightboxContent = document.getElementById('lightbox-content');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxCounter = document.getElementById('lightbox-counter');
+    const lightboxDesc = document.getElementById('lightbox-desc');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const lightboxPrev = document.getElementById('lightbox-prev');
+    const lightboxNext = document.getElementById('lightbox-next');
+
+    function renderLightboxImage(index) {
+      lightboxIndex = (index + projectImages.length) % projectImages.length;
+      const img = projectImages[lightboxIndex];
+
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightboxCaption.textContent = img.alt || 'Vista previa del proyecto';
+
+      if (lightboxCounter) {
+        lightboxCounter.textContent = `${lightboxIndex + 1} / ${projectImages.length}`;
+        lightboxCounter.style.display = hasMultiple ? 'inline-block' : 'none';
+      }
+
+      const extraDesc = img.getAttribute('data-description');
+      if (lightboxDesc) {
+        lightboxDesc.textContent = extraDesc || '';
+        lightboxDesc.style.display = extraDesc ? 'block' : 'none';
+      }
+
+      // Sincroniza el carrusel de fondo con la captura actual del Lightbox
+      if (carouselApi) {
+        carouselApi.goToSlide(lightboxIndex);
+      }
+    }
+
+    projectImages.forEach((img, index) => {
+      img.setAttribute('title', 'Haz clic para ampliar la imagen');
+      img.addEventListener('click', () => {
+        renderLightboxImage(index);
+        lightbox.classList.add('open');
+      });
+    });
+
+    const closeLightbox = () => {
+      lightbox.classList.remove('open');
+    };
+
+    if (lightboxPrev) {
+      lightboxPrev.addEventListener('click', () => renderLightboxImage(lightboxIndex - 1));
+    }
+    if (lightboxNext) {
+      lightboxNext.addEventListener('click', () => renderLightboxImage(lightboxIndex + 1));
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+
+    // Swipe táctil dentro del modal Lightbox
+    if (lightboxContent && hasMultiple) {
+      let lbTouchX = 0;
+      let lbTouchY = 0;
+
+      lightboxContent.addEventListener('touchstart', (e) => {
+        lbTouchX = e.changedTouches[0].clientX;
+        lbTouchY = e.changedTouches[0].clientY;
+      }, { passive: true });
+
+      lightboxContent.addEventListener('touchend', (e) => {
+        const diffX = e.changedTouches[0].clientX - lbTouchX;
+        const diffY = e.changedTouches[0].clientY - lbTouchY;
+
+        if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+          if (diffX < 0) renderLightboxImage(lightboxIndex + 1);
+          else renderLightboxImage(lightboxIndex - 1);
+        }
+      }, { passive: true });
+    }
+
+    // Navegación por teclado (Esc, Flecha Izquierda y Flecha Derecha)
+    document.addEventListener('keydown', (e) => {
+      const isLightboxOpen = lightbox.classList.contains('open');
+      const isTyping = ['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName);
+
+      if (e.key === 'Escape' && isLightboxOpen) {
+        closeLightbox();
+        return;
+      }
+
+      if (isTyping || !hasMultiple) return;
+
+      if (e.key === 'ArrowRight') {
+        if (isLightboxOpen) renderLightboxImage(lightboxIndex + 1);
+        else if (carouselApi) carouselApi.goToSlide(carouselApi.getCurrentIndex() + 1);
+      } else if (e.key === 'ArrowLeft') {
+        if (isLightboxOpen) renderLightboxImage(lightboxIndex - 1);
+        else if (carouselApi) carouselApi.goToSlide(carouselApi.getCurrentIndex() - 1);
+      }
+    });
   }
 
   // ------------------------------------------------------------------------
-  // 9. ROBOT DE CUERPO COMPLETO (Cabeza, Torso, Brazos flotantes y Mirada 3D)
-  // Levita libremente sin burbujas de chat y sigue el cursor con todo el cuerpo
+  // 7. BOTÓN "CONSULTAR DETALLES" DESPLEGABLE EN PROJECTS.HTML
+  // ------------------------------------------------------------------------
+  const toggleDetailsBtn = document.getElementById('toggle-project-details');
+  const detailsDrawer = document.getElementById('project-details-drawer');
+
+  if (toggleDetailsBtn && detailsDrawer) {
+    toggleDetailsBtn.addEventListener('click', () => {
+      const isOpen = detailsDrawer.classList.toggle('open');
+      toggleDetailsBtn.setAttribute('aria-expanded', isOpen);
+      toggleDetailsBtn.textContent = isOpen ? 'Ocultar detalles' : 'Consultar detalles';
+    });
+  }
+
+  // ------------------------------------------------------------------------
+  // 9. ROBOT DE CUERPO COMPLETO CON FÍSICA FLUIDA (Lerp + requestAnimationFrame)
+  // Sigue la mirada y reacciona al scroll con inercia orgánica
   // ------------------------------------------------------------------------
   const robotStage = document.createElement('div');
   robotStage.className = 'interactive-robot-stage';
@@ -277,64 +438,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
       <!-- CAPA 1: TORSO, CUELLO Y PROPULSOR INFERIOR -->
       <g class="robot-torso-group" id="robot-torso-group">
-        <!-- Anillo propulsor inferior -->
         <ellipse cx="60" cy="134" rx="14" ry="4.5" fill="#047857" opacity="0.45"/>
         <path d="M 48 124 Q 60 138 72 124 Z" fill="url(#roboDark)"/>
-
-        <!-- Articulación del cuello -->
         <rect x="53" y="68" width="14" height="10" rx="4" fill="#334155"/>
-
-        <!-- Cuerpo / Torso curvo estilo droide moderno -->
         <path d="M 34 80 C 34 74, 86 74, 86 80 L 80 120 C 78 128, 42 128, 40 120 Z" fill="url(#roboArmor)" stroke="#ffffff" stroke-width="2"/>
-
-        <!-- Panel pectoral y reactor Esmeralda en el pecho -->
         <rect x="44" y="85" width="32" height="22" rx="8" fill="#e2e8f0" stroke="#ffffff" stroke-width="1"/>
         <circle cx="60" cy="96" r="7" fill="url(#roboDark)"/>
         <circle class="robot-core-light" cx="60" cy="96" r="4.2" fill="#10b981"/>
         <circle cx="58.8" cy="94.8" r="1.3" fill="#ffffff" opacity="0.9"/>
-
-        <!-- Líneas de detalle mecánico en abdomen -->
         <line x1="49" y1="114" x2="71" y2="114" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
       </g>
 
       <!-- CAPA 2: BRAZOS / MANOS MAGNÉTICAS FLOTANTES -->
       <g class="robot-arms-group" id="robot-arms-group">
-        <!-- Brazo izquierdo -->
         <g id="robot-arm-left">
           <rect x="15" y="82" width="13" height="32" rx="6.5" transform="rotate(8 21 98)" fill="url(#roboArmor)" stroke="#ffffff" stroke-width="1.5"/>
           <circle cx="21" cy="87" r="2.5" fill="#047857"/>
         </g>
-        <!-- Brazo derecho -->
         <g id="robot-arm-right">
           <rect x="92" y="82" width="13" height="32" rx="6.5" transform="rotate(-8 98 98)" fill="url(#roboArmor)" stroke="#ffffff" stroke-width="1.5"/>
           <circle cx="99" cy="87" r="2.5" fill="#047857"/>
         </g>
       </g>
 
-      <!-- CAPA 3: CABEZA COMPLETA (Se inclina y mira hacia el mouse) -->
+      <!-- CAPA 3: CABEZA COMPLETA -->
       <g class="robot-head-group" id="robot-head-group">
-        <!-- Antena superior -->
         <g class="robot-antenna-group" id="robot-antenna-group">
           <line x1="60" y1="10" x2="60" y2="22" stroke="#475569" stroke-width="3.2" stroke-linecap="round"/>
           <circle class="robot-antenna-light" cx="60" cy="9" r="4.5" fill="#10b981"/>
         </g>
 
-        <!-- Orejas / Sensores laterales -->
         <rect x="19" y="38" width="7" height="18" rx="3.5" fill="#047857"/>
         <rect x="94" y="38" width="7" height="18" rx="3.5" fill="#047857"/>
-
-        <!-- Casco principal -->
         <rect x="24" y="20" width="72" height="52" rx="24" fill="url(#roboArmor)" stroke="#ffffff" stroke-width="2.2"/>
-        <!-- Reflejo superior del casco -->
         <path d="M 38 25 Q 60 21 82 25" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.95"/>
 
-        <!-- Visor oscuro -->
         <g class="robot-visor-group" id="robot-visor-group">
           <rect x="31" y="30" width="58" height="32" rx="14" fill="url(#roboDark)" stroke="#334155" stroke-width="1.2"/>
           <path d="M 37 35 Q 50 32 62 35" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2" stroke-linecap="round"/>
         </g>
 
-        <!-- Ojos LED Esmeralda que siguen al puntero -->
         <g class="robot-eyes-group" id="robot-eyes-group">
           <rect class="robot-eye" x="42" y="40" width="9" height="12" rx="4.5" fill="#10b981"/>
           <rect class="robot-eye" x="69" y="40" width="9" height="12" rx="4.5" fill="#10b981"/>
@@ -354,35 +497,58 @@ document.addEventListener('DOMContentLoaded', () => {
   const roboTorso = document.getElementById('robot-torso-group');
   const roboArms = document.getElementById('robot-arms-group');
 
-  // Seguimiento de mirada y cuerpo en tiempo real al mover el mouse
-  document.addEventListener('mousemove', (e) => {
-    const rect = robotStage.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height * 0.35;
+  if (!prefersReducedMotion) {
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let targetScrollImpulse = 0;
+    let currentScrollImpulse = 0;
+    let lastScrollY = window.scrollY;
 
-    const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (window.innerWidth * 0.6)));
-    const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (window.innerHeight * 0.6)));
+    document.addEventListener('mousemove', (e) => {
+      const rect = robotStage.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height * 0.35;
 
-    // Ojos y visor se enfocan directamente en la dirección del mouse
-    roboEyes.style.transform = `translate(${normX * 8.5}px, ${normY * 6}px)`;
-    roboVisor.style.transform = `translate(${normX * 3.8}px, ${normY * 2.8}px)`;
+      targetX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (window.innerWidth * 0.6)));
+      targetY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (window.innerHeight * 0.6)));
+    });
 
-    // La cabeza gira e inclina hacia el puntero
-    roboHead.style.transform = `translate(${normX * 3.5}px, ${normY * 2.5}px) rotate(${normX * 7}deg)`;
+    // Reacción suave al hacer scroll (los brazos y la antena sienten la inercia)
+    window.addEventListener('scroll', () => {
+      const delta = window.scrollY - lastScrollY;
+      lastScrollY = window.scrollY;
+      targetScrollImpulse = Math.max(-1, Math.min(1, delta / 35));
+    }, { passive: true });
 
-    // La antena hace contrapeso elástico
-    roboAntenna.style.transform = `translate(${normX * -2.5}px, 0px) rotate(${normX * -10}deg)`;
+    // Bucle de animación con interpolación lineal (Lerp)
+    function animateRobot() {
+      currentX += (targetX - currentX) * 0.12;
+      currentY += (targetY - currentY) * 0.12;
+      currentScrollImpulse += (targetScrollImpulse - currentScrollImpulse) * 0.14;
+      targetScrollImpulse *= 0.88; // El impulso de scroll se disipa suavemente
 
-    // El torso y los brazos flotantes acompañan el movimiento con parallax suave
-    roboTorso.style.transform = `translate(${normX * 1.6}px, ${normY * 1.2}px) rotate(${normX * 2.5}deg)`;
-    roboArms.style.transform = `translate(${normX * -2.8}px, ${normY * -1.8}px)`;
-  });
+      const combinedY = Math.max(-1, Math.min(1, currentY + currentScrollImpulse * 0.45));
 
-  // Parpadeo natural automático
-  setInterval(() => {
-    robotStage.classList.add('robot-blinking');
-    setTimeout(() => robotStage.classList.remove('robot-blinking'), 140);
-  }, 3600);
+      roboEyes.style.transform = `translate(${currentX * 8.5}px, ${combinedY * 6}px)`;
+      roboVisor.style.transform = `translate(${currentX * 3.8}px, ${combinedY * 2.8}px)`;
+      roboHead.style.transform = `translate(${currentX * 3.5}px, ${combinedY * 2.5}px) rotate(${currentX * 7}deg)`;
+      roboAntenna.style.transform = `translate(${currentX * -2.5}px, ${currentScrollImpulse * -3.5}px) rotate(${currentX * -10}deg)`;
+      roboTorso.style.transform = `translate(${currentX * 1.6}px, ${combinedY * 1.2}px) rotate(${currentX * 2.5}deg)`;
+      roboArms.style.transform = `translate(${currentX * -2.8}px, ${currentY * -1.8 + currentScrollImpulse * -5}px)`;
+
+      requestAnimationFrame(animateRobot);
+    }
+
+    requestAnimationFrame(animateRobot);
+
+    // Parpadeo natural automático
+    setInterval(() => {
+      robotStage.classList.add('robot-blinking');
+      setTimeout(() => robotStage.classList.remove('robot-blinking'), 140);
+    }, 3600);
+  }
 
   // Destello de energía en el núcleo y ojos al pasar sobre botones o enlaces
   const interactiveEls = document.querySelectorAll('a, button, .project-img, .tech-item-card');
